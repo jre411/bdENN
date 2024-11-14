@@ -40,7 +40,7 @@ class NetworkVisualizer():
         # Default plot settings
         self.nInputRows = self.inputDims
 
-        # Make neurons
+        # Initialize neuron lists for each layer (input, hidden, output)
         self.inputNeurons = []
         self.hiddenNeurons = [[] for _ in range(self.nHiddenLayers)]
         self.outputNeurons = []
@@ -57,7 +57,7 @@ class NetworkVisualizer():
 
                 
         # Hidden neurons
-        _center = np.array([30, 7.5])
+        _center = np.array([30, 7.5]) # Center of the first hidden layer, ideally set this algorithmically
         for i in range(self.nHiddenLayers):
             for j in range(self.hiddenDims):
                 _neuron = Neuron(_center[0], _center[1] + j*7.5, 
@@ -66,7 +66,7 @@ class NetworkVisualizer():
             _center[0] += 15
         
         # Output neurons
-        _center = np.array([60, 2.5])
+        _center = np.array([60, 2.5]) # Center of the output layer, ideally set this algorithmically
         _conceptColors = ["#D28383", "#92D6F0", "#ACE7C5"]
         _concepts = ["HB", "SB", "NB"]
         for i in range(self.outputDims):
@@ -76,7 +76,10 @@ class NetworkVisualizer():
             self.outputNeurons.append(_neuron)
 
     def createConnections(self):
-        """Create connections between each connected layer."""
+        """
+        Create connections between each connected layer.
+        Assumes a fully connected network, wherein each neuron in a layer is connected to all neurons in the next layer.
+        """
         # Input to hidden
         for _ in self.inputNeurons:
             for __ in self.hiddenNeurons[0]:
@@ -84,7 +87,7 @@ class NetworkVisualizer():
                     [(_.x, __.x), (_.y, __.y)]
                 )
 
-        # Hidden to hidden
+        # Hidden to hidden (here we only have 2 hidden layers, ideally this should be done in a loop)
         for _ in self.hiddenNeurons[0]:
             for __ in self.hiddenNeurons[1]:
                 _.connections.append(
@@ -92,7 +95,7 @@ class NetworkVisualizer():
                 )
 
         # Hidden to output
-        for _ in self.hiddenNeurons[1]:
+        for _ in self.hiddenNeurons[-1]: # Last hidden layer
             for __ in self.outputNeurons:
                 _.connections.append(
                     [(_.x, __.x), (_.y, __.y)]
@@ -106,10 +109,9 @@ class NetworkVisualizer():
             _.plotConnections(ax, alpha=0.05)
 
         # Hidden layers
-        for i in range(self.nHiddenLayers):
-            for j in range(self.hiddenDims):
-                self.hiddenNeurons[i][j].plotNeuron(ax)
-                self.hiddenNeurons[i][j].plotConnections(ax, alpha=1)
+        for _ in [neuron for layer in self.hiddenNeurons for neuron in layer]:
+            _.plotNeuron(ax)
+            _.plotConnections(ax, alpha=1)
 
         # Output layer
         for _ in self.outputNeurons:
@@ -152,5 +154,5 @@ class Neuron():
 
             # Make a sigmoid connection
             _ax.plot(x, y, color=self.connectionColor, alpha=alpha, zorder=-1)
-            _ax.plot(x, y+0.1, color="black", alpha=alpha, zorder=-1, linewidth=0.025)
-            _ax.plot(x, y-0.1, color="black", alpha=alpha, zorder=-1, linewidth=0.025)
+            #_ax.plot(x, y+0.1, color="black", alpha=alpha, zorder=-1, linewidth=0.025)
+            #_ax.plot(x, y-0.1, color="black", alpha=alpha, zorder=-1, linewidth=0.025)
