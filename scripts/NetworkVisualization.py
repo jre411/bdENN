@@ -98,3 +98,132 @@ fig.savefig(logMan.mediaDir + "/Fig1e.png",
             transparent=True, 
             dpi=300)
 plt.close(fig)
+
+# Plot a representative ENN (Fig 3c)
+initialColorHex = "#808080" # Gray
+middleColorHex = "#FFFFFF" # White
+finalColorHex = "#ffe116" # Gold
+
+# Generate the color gradient
+colorGradient = cF.genColorGradient(initialColorHex, finalColorHex, 101)
+
+# Load the embeddings
+import numpy as np
+from sklearn.model_selection import train_test_split
+xAll, yAll = cF.loadEmbeddings()
+xTrain, xTest, yTrain, yTest = train_test_split(xAll, yAll, test_size=0.15, random_state=42, stratify=yAll)
+
+import enn.learnBoundaries as lB
+mdlENN = lB.main_0(xTrain, yTrain, 0, globers["nHiddenNeurons"]) # Train the ENN
+
+# Get the weights
+enn_InputWeights = mdlENN.layers[0].weights
+enn_HL1Weights = mdlENN.layers[1].weights
+enn_HL2Weights = mdlENN.layers[2].weights
+
+# Reshape input weights to get the frame absolute average, normalized
+enn_InputWeights512 = np.reshape(enn_InputWeights, (globers["nFrames"], 
+                                                    globers["dimsPerFrame"], 
+                                                    globers["nHiddenNeurons"]))
+enn_InputWeights512AbsAvg = np.mean(np.abs(enn_InputWeights512), axis=0)
+enn_InputWeights512AbsAvgNorm = enn_InputWeights512AbsAvg / np.max(np.abs(enn_InputWeights512))
+
+# Normalize the hidden layer weights
+enn_HL1WeightsNorm = enn_HL1Weights / np.max(np.abs(enn_HL1Weights))
+enn_HL2WeightsNorm = enn_HL2Weights / np.max(np.abs(enn_HL2Weights))
+
+figWidth = 6
+figHeight = 3
+fig, ax = plt.subplots(1, 1, figsize=(figWidth, figHeight))
+
+# Initialize the network visualizer
+networkVisualizer = NV.NetworkVisualizer(inputDims=globers["dimsPerFrame"], 
+                               nFrames=globers["nFrames"],
+                               nHiddenLayers=globers["nHiddenLayers"], 
+                               nHiddenNeurons=globers["nHiddenNeurons"],
+                               outputDims=globers["nClasses"], 
+                               inputWeights=enn_InputWeights512AbsAvgNorm,
+                               hiddenLayerWeights=[enn_HL1WeightsNorm, enn_HL2WeightsNorm],                        
+                               )
+
+# Set plot parameters
+networkVisualizer.nInputRows = 32
+
+# Create the neurons and connections
+networkVisualizer.createNeurons()
+networkVisualizer.createConnections(colorGradient)
+
+# Plot the network
+networkVisualizer.plotNetwork(ax=ax)
+networkVisualizer.annotateNetwork(ax=ax)
+
+# Figure settings
+ax.set_xlim(-1, networkVisualizer.nInputRows * 2 + 1)
+ax.set_ylim(-1, networkVisualizer.nInputRows + 1)
+ax.axis("off")
+fig.tight_layout()
+
+# Save the figure
+fig.savefig(logMan.mediaDir + "/Fig3c.png",
+            transparent=True, 
+            dpi=300)
+plt.close(fig)
+
+# Plot a representative MLP (Fig 3b)
+from sklearn.neural_network import MLPClassifier
+
+mdlMLP = MLPClassifier(hidden_layer_sizes=(3,3), max_iter=1000, random_state=42)
+mdlMLP.fit(xTrain, yTrain)
+
+# Get the weights
+mlp_InputWeights = mdlMLP.coefs_[0]
+mlp_HL1Weights = mdlMLP.coefs_[1]
+mlp_HL2Weights = mdlMLP.coefs_[2]
+
+# Reshape input weights to get the frame absolute average, normalized
+mlp_InputWeights512 = np.reshape(mlp_InputWeights, (globers["nFrames"], 
+                                                    globers["dimsPerFrame"], 
+                                                    globers["nHiddenNeurons"]))
+mlp_InputWeights512AbsAvg = np.mean(np.abs(mlp_InputWeights512), axis=0)
+mlp_InputWeights512AbsAvgNorm = mlp_InputWeights512AbsAvg / np.max(np.abs(mlp_InputWeights512))
+
+# Normalize the hidden layer weights
+mlp_HL1WeightsNorm = mlp_HL1Weights / np.max(np.abs(mlp_HL1Weights))
+mlp_HL2WeightsNorm = mlp_HL2Weights / np.max(np.abs(mlp_HL2Weights))
+
+figWidth = 6
+figHeight = 3
+fig, ax = plt.subplots(1, 1, figsize=(figWidth, figHeight))
+
+# Initialize the network visualizer
+networkVisualizer = NV.NetworkVisualizer(inputDims=globers["dimsPerFrame"], 
+                               nFrames=globers["nFrames"],
+                               nHiddenLayers=globers["nHiddenLayers"], 
+                               nHiddenNeurons=globers["nHiddenNeurons"],
+                               outputDims=globers["nClasses"], 
+                               inputWeights=mlp_InputWeights512AbsAvgNorm,
+                               hiddenLayerWeights=[mlp_HL1WeightsNorm, mlp_HL2WeightsNorm],                        
+                               )
+
+# Set plot parameters
+networkVisualizer.nInputRows = 32
+
+# Create the neurons and connections
+networkVisualizer.createNeurons()
+networkVisualizer.createConnections(colorGradient)
+
+# Plot the network
+networkVisualizer.plotNetwork(ax=ax)
+networkVisualizer.annotateNetwork(ax=ax)
+
+# Figure settings
+ax.set_xlim(-1, networkVisualizer.nInputRows * 2 + 1)
+ax.set_ylim(-1, networkVisualizer.nInputRows + 1)
+ax.axis("off")
+fig.tight_layout()
+
+# Save the figure
+fig.savefig(logMan.mediaDir + "/Fig3b.png",
+            transparent=True, 
+            dpi=300)
+plt.close(fig)
