@@ -105,7 +105,9 @@ middleColorHex = "#FFFFFF" # White
 finalColorHex = "#ffe116" # Gold
 
 # Generate the color gradient
-colorGradient = cF.genColorGradient(initialColorHex, finalColorHex, 101)
+colorGradient1 = cF.genColorGradient(initialColorHex, middleColorHex, 50)
+colorGradient2 = cF.genColorGradient(middleColorHex, finalColorHex, 51)
+colorGradient = colorGradient1 + colorGradient2
 
 # Load the embeddings
 import numpy as np

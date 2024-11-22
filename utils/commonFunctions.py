@@ -40,7 +40,6 @@ def getTruePosInds(_mdl, _x, _y, mdlType="enn", verbose="True"):
         print("True positive rate: {}/{}".format(len(_tpInds), len(_x)))
     return _tpInds
 
-# Let's make the above a helper function
 def loadNeuron(_nNeuron, _cellType, projDir="/project/greencenter/Lin_lab/s181641/bdENS/", branch="develop"):
     """
     Load neuron recordings from fJie dataset
