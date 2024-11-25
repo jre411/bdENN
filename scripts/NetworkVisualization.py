@@ -4,13 +4,20 @@ Path: bdENS/repo/scripts/NetworkVisualization.py
 Boundary-Detecting ENN Project
 Network Visualization
 - Figure 1e: Top Model Visualization
+- Figure 3b: MLP Visualization
+- Figure 3c: ENN Visualization
+- Figure 3d: Circuit Visualization
 Author: James R. Elder
 Institution: UTSW
 
 DOO: 11-07-2024
-LU: 11-07-2024
+LU: 11-25-2024
 
-Reference: bdENS/develop/FigureScripts/Fig1e.py
+Reference(s): 
+    - bdENS/develop/FigureScripts/Fig1e.py
+    - bdENS/develop/FigureScripts/Fig3b.py
+    - bdENS/develop/FigureScripts/Fig3c.py
+    - bdENS/develop/FigureScripts/Fig3d.py
 
 - Python 3.12.2
 - bdENSenv
@@ -56,6 +63,7 @@ cF.updatePlotrcs(font="serif")
 # Variables
 globers = {
     "randomSeed": 42,
+    "classes": ["No Boundary", "Soft Boundary", "Hard Boundary"],
     "nClasses": 3,
     "nHiddenLayers": 2,
     "nHiddenNeurons": 3,
@@ -226,6 +234,29 @@ fig.tight_layout()
 
 # Save the figure
 fig.savefig(logMan.mediaDir + "/Fig3b.png",
+            transparent=True, 
+            dpi=300)
+plt.close(fig)
+
+# Now for the circuit (Fig 3d)  
+figWidth = 6
+figHeight = 2
+fig, ax = plt.subplots(1, len(globers["classes"]), figsize=(figWidth, figHeight))
+
+connectionStates = [ [0, 0, 0], [1, 1, 0], [1, 1, 1] ]
+
+circuitVisualizer = NV.CircuitVisualizer()
+circuitVisualizer.createNeurons()
+circuitVisualizer.createConnections()
+
+for i in range(len(globers["classes"])):
+    circuitVisualizer.setConnectionStates(connectionStates[i])
+    circuitVisualizer.plotCircuit(ax[i])
+    circuitVisualizer.annotateCircuit(ax[i])
+    ax[i].set_title(globers["classes"][i])
+
+plt.tight_layout()
+fig.savefig(logMan.mediaDir + "/Fig3d.png",
             transparent=True, 
             dpi=300)
 plt.close(fig)
