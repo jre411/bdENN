@@ -36,7 +36,10 @@ class LoggingManager:
         # Directory dictionary
         self.subprojID = subprojID
         self.curDir = os.getcwd() 
+        
         self.mediaDir = self.curDir + "/media"
+        self.inputDir = self.curDir + "/inputs"
+        self.outputDir = self.curDir + "/outputs"
         self.loggingDir = self.curDir + "/.logging"
         self.checkDir()
 

@@ -577,7 +577,7 @@ xAll_NB = xAll[yAll == 0]
 xAll_SB = xAll[yAll == 1]
 xAll_HB = xAll[yAll == 2]
 
-nNetworks = 2
+nNetworks = 20
 enn_l1Outputs = np.zeros((nNetworks, 90, 3))
 enn_l2Outputs = np.zeros((nNetworks, 90, 3))
 mlp_l1Outputs = np.zeros((nNetworks, 90, 3))

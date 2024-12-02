@@ -122,7 +122,7 @@ maxSplit = 0.9
 nSplits = 10
 splits = np.linspace(minSplit, maxSplit, nSplits)
 
-nTrials = 10
+nTrials = 100
 
 mdlAccs = np.zeros((len(mdlNames), nSplits, nTrials))
 
