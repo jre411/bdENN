@@ -81,8 +81,8 @@ saveSuffix = "{}n{}s{}t-{}r".format(globers["maxNoise"], globers["nSteps"], glob
 ennAccs = np.load(logMan.outputDir + "/ennAccs_{}.npy".format(saveSuffix))
 mlpAccs = np.load(logMan.outputDir + "/mlpAccs_{}.npy".format(saveSuffix))
 
-figWidth = 5
-figHeight = 2.5
+figWidth = 6
+figHeight = 3
 fig, ax = plt.subplots(1, 2, figsize=(figWidth, figHeight))
 
 showQuartiles = True
@@ -97,7 +97,7 @@ if showQuartiles:
                     np.quantile(mlpAccs, 0.75, axis=0), alpha=0.2, color=cC.networkColors["mlp"])
     
 ax[0].set_xlabel("Fractional Noise")
-ax[0].set_ylabel("Accuracy")
+ax[0].set_ylabel("Retention Accuracy")
 
 # Variables
 globers = {
@@ -106,7 +106,7 @@ globers = {
     "trainTestSplit": 0.8,
     "nHiddenLayers": 2,
     "nHiddenNeurons": 3,
-    "nTrials": 50
+    "nTrials": 1000,
 }
 
 enners = {
@@ -134,7 +134,7 @@ for i in range(globers["nTrials"]):
     mdlENN = lB.main_0(xTrain, yTrain, enners["subconceptSelector"], globers["nHiddenNeurons"])
 
     inputWeights = mdlENN.layers[0].weights
-    inputWeightsFrame = np.reshape(inputWeights, (4, 512, 3))
+    inputWeightsFrame = np.reshape(inputWeights, (4, nFeatures, 3))
     inputWeightsFrameAvg = np.mean(np.abs(inputWeightsFrame), axis=0)
     inputWeightsFrameAvgAvg = np.mean(inputWeightsFrameAvg, axis=1)
 
@@ -184,8 +184,8 @@ for i in range(globers["nTrials"]):
 mlpMask = accsMLP[:,0] > 0.5
 convergedMLPs = accsMLP[mlpMask]
 
-ax[1].plot(np.mean(accsENN, axis=0), label="ENN", color=cC.networkColors["enn"])
-ax[1].plot(np.mean(convergedMLPs, axis=0), label="Backprop", color=cC.networkColors["mlp"])
+ax[1].plot(np.median(accsENN, axis=0), label="ENN", color=cC.networkColors["enn"])
+ax[1].plot(np.median(convergedMLPs, axis=0), label="Backprop", color=cC.networkColors["mlp"])
 
 if showQuartiles:
     ax[1].fill_between(range(nFeatures), np.quantile(accsENN, 0.25, axis=0), 
@@ -193,12 +193,24 @@ if showQuartiles:
     ax[1].fill_between(range(nFeatures), np.quantile(convergedMLPs, 0.25, axis=0), 
                     np.quantile(convergedMLPs, 0.75, axis=0), alpha=0.2, color=cC.networkColors["mlp"])
 
-ax[0].set_yticks([0.5, 0.75, 1.0])
-ax[1].set_yticks([0., 0.5, 1.0])
+# Add horizontal line for chance (0.33)
+ax[0].axhline(y=1/3, color='black', linestyle='--')
+ax[1].axhline(y=1/3, color='black', linestyle='--')
+
+# Annotate chance line
+ax[0].text(10, 1/3+.025, "Chance", fontsize=8)
+ax[1].text(10, 1/3+.025, "Chance", fontsize=8)
+
+ax[0].set_ylim([0.25, 1.0])
+ax[1].set_ylim([0.25, 1.0])
+
+ax[0].set_yticks([0.25, 0.5, 0.75, 1.0], labels=["0.25", "0.50", "0.75", "1.00"])
+ax[1].set_yticks([0.25, 0.5, 0.75, 1.0], labels=["0.25", "0.50", "0.75", "1.00"])
 ax[1].set_xticks([0, 128, 256, 384, 512])
 ax[1].set_xlabel("Features removed")
 ax[1].set_ylabel("Accuracy")
 
+fig.tight_layout()
 fig.savefig(logMan.mediaDir + "/Fig3e.png",
             transparent=True, 
             dpi=300)

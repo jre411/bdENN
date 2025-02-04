@@ -7,7 +7,7 @@ Author: James R. Elder
 Institution: UTSW
 
 DOO: 12-02-2024
-LU: 12-02-2024
+LU: 01-16-2025
 
 Reference(s): 
     - bdENS/develop/scripts/LearningSolution.py
@@ -200,8 +200,8 @@ endHex = "#d1c73d"
 ennGradient = cF.genColorGradient(startHex, cC.networkColors["enn"], nSplits)
 mlpGradient = cF.genColorGradient(startHex, cC.networkColors["mlp"], nSplits)
 
-figWidth = 8
-figHeight = 6
+figWidth = 5
+figHeight = 5
 fig, ax = plt.subplots(4, 3, figsize=((figWidth, figHeight)))
 
 ax[3,0].hist(ennl1weightsNormAbsAvg.flatten(), bins=inputBins, edgecolor='black', color=enners["cPlot"], label="ENN")
@@ -252,12 +252,13 @@ ax[2,0].set_xlim([-0.01, 0.75])
 ax[1,0].set_xlim([-0.01, 0.75])
 ax[3,0].set_xlim([-0.01, 0.75])
 
-ax[0,1].set_xticks([0.01, 0.5, 1], labels=["0.01", "", "1"])
-ax[0,2].set_xticks([0.01, 0.5, 1], labels=["0.01", "", "1"])
+labels = ["1%", "", "100%"]
+ax[0,1].set_xticks([0.01, 0.5, 1], labels=labels)
+ax[0,2].set_xticks([0.01, 0.5, 1], labels=labels)
 ax[0,1].set_yticks([-1, 0, 1])
 ax[0,2].set_yticks([-1, 0, 1])
-ax[2,1].set_xticks([0.01, 0.5, 1], labels=["0.01", "", "1"])
-ax[2,2].set_xticks([0.01, 0.5, 1], labels=["0.01", "", "1"])
+ax[2,1].set_xticks([0.01, 0.5, 1], labels=labels)
+ax[2,2].set_xticks([0.01, 0.5, 1], labels=labels)
 ax[2,1].set_yticks([-1, 0, 1])
 ax[2,2].set_yticks([-1, 0, 1])
 
