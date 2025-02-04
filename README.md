@@ -1,6 +1,7 @@
 # Boundary-detecting neural systems (BDNS)
 
 ## Description
+Data and code related to "An invariant schema emerges within a neural network during hierarchical learning of visual boundaries" (ref: https://www.biorxiv.org/content/10.1101/2025.01.30.635821v1)
 
 ## Usage
 This github page is the official repository for released code and data related to the project.
@@ -29,8 +30,13 @@ The project is organized into the following directories
     - Contains the code for Essence Neural Networks (ref: https://www.nature.com/articles/s43588-021-00132-w)
 - inputs
     - Contains input data for the project
+- media
+    - Contains media files for the project
+- scripts
+    - Contains scripts for running the project
 - utils
     - Contains utility functions for the project
+
 
 ## Contact
 Please reach out to James R. Elder with any questions or suggestions for the project
