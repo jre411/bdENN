@@ -98,3 +98,22 @@ mlpAccs = mlpAccs[mlpAccs > convThreshold]
 
 fig.tight_layout()
 fig.savefig(logMan.mediaDir + "/sFig1.png", dpi=300)
+
+# Let's make a dummy figure to generate a legend for another figure
+fig, ax = plt.subplots()
+
+# I need labels for 
+#   - Training Data: square, no fill, black border
+#   - Test Data (correctly predicted): circle, no fill, grey border
+#   - Test Data (incorrectly predicted): X, no fill, black border
+
+ax.scatter(0, 0, marker="s", edgecolor="black", facecolor="none", label="Training Data")
+ax.scatter(0, 0, marker="o", edgecolor="grey", facecolor="none", label="Test Data (Correct)")
+ax.scatter(0, 0, marker="x", facecolor="black", label="Test Data (Incorrect)")
+ax.axis("off")
+
+
+ax.legend(ncols=3, loc="center", bbox_to_anchor=(.5, .75))
+fig.savefig(logMan.mediaDir + "/Fig4c_legend.png", dpi=300)
+plt.close(fig)
+
